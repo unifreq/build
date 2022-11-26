@@ -10,8 +10,7 @@ OVERLAY_PREFIX='rockchip'
 SERIALCON=${SERIALCON:=$([ $BRANCH == "legacy" ] && echo "ttyFIQ0:1500000" || echo "ttyS2:1500000")}
 GOVERNOR="ondemand"
 ATFPATCHDIR='atf-rockchip64'
-BOOTBRANCH="tag:v2022.07"
-BOOTPATCHDIR="u-boot-rockchip64"
+BOOTPATCHDIR="${BOOTPATCHDIR:-"u-boot-rockchip64"}"
 PACKAGE_LIST_FAMILY="ethtool"
 
 RKBIN_DIR="$SRC/cache/sources/rkbin-tools"
@@ -65,7 +64,11 @@ if [[ $BOOT_SOC == rk3328 ]]; then
 elif [[ $BOOT_SOC == rk3399 ]]; then
 
 	BOOT_SCENARIO="${BOOT_SCENARIO:=only-blobs}"
-	DDR_BLOB="${DDR_BLOB:=rk33/rk3399_ddr_933MHz_v1.25.bin}"
+	if [[ $BOARD_NAME == "Tinker Board 2" ]]; then
+		DDR_BLOB="${DDR_BLOB:=rk33/rk3399_ddr_800MHz_v1.27.bin}"
+	else
+		DDR_BLOB="${DDR_BLOB:=rk33/rk3399_ddr_933MHz_v1.25.bin}"
+	fi
 	MINILOADER_BLOB='rk33/rk3399_miniloader_v1.26.bin'
 	BL31_BLOB='rk33/rk3399_bl31_v1.35.elf'
 
@@ -91,8 +94,8 @@ elif [[ $BOOT_SOC == rk3568 ]]; then
 elif [[ $BOOT_SOC == rk3588 ]]; then
 
 	BOOT_SCENARIO="${BOOT_SCENARIO:=spl-blobs}"
-	DDR_BLOB="${DDR_BLOB:=rk35/rk3588_ddr_lp4_2112MHz_lp5_2736MHz_v1.07.bin}"
-	BL31_BLOB='rk35/rk3588_bl31_v1.25.elf'
+	DDR_BLOB="${DDR_BLOB:=rk35/rk3588_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin}"
+	BL31_BLOB='rk35/rk3588_bl31_v1.28.elf'
 
 elif [[ $BOARD == rockpi-s ]]; then
 
@@ -122,7 +125,7 @@ case $BRANCH in
 	edge)
 
 		KERNELPATCHDIR='rockchip64-'$BRANCH
-		KERNELBRANCH="branch:linux-5.19.y"
+		KERNELBRANCH="branch:linux-6.0.y"
 		LINUXFAMILY=rockchip64
 		LINUXCONFIG='linux-rockchip64-'$BRANCH
 
